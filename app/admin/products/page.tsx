@@ -4,8 +4,6 @@ import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Badge } from "@/components/ui/badge"
 import { Plus, Edit, Trash2, Loader2 } from "lucide-react"
 import {
   Dialog,
@@ -157,11 +155,11 @@ export default function ProductsPage() {
     <div className="min-h-screen bg-muted/30">
       <AdminHeader />
 
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex items-center justify-between mb-6">
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        <div className="flex items-center justify-between mb-6 gap-4 flex-wrap">
           <div>
             <h1 className="text-2xl font-bold">Products Management</h1>
-            <p className="text-sm text-muted-foreground">Manage your product catalog</p>
+            <p className="text-sm text-foreground">Manage your product catalog</p>
           </div>
           <Dialog
             open={dialogOpen}
@@ -174,7 +172,7 @@ export default function ProductsPage() {
             }}
           >
             <DialogTrigger asChild>
-              <Button>
+              <Button hideIcon>
                 <Plus className="h-4 w-4 mr-2" />
                 Add Product
               </Button>
@@ -188,7 +186,7 @@ export default function ProductsPage() {
               </DialogHeader>
               <div className="space-y-4 pt-4">
                 <div className="space-y-2">
-                  <Label htmlFor="name">Product Name</Label>
+                  <label htmlFor="name">Product Name</label>
                   <Input
                     id="name"
                     placeholder="Full Cream Milk"
@@ -197,7 +195,7 @@ export default function ProductsPage() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="description">Description</Label>
+                  <label htmlFor="description">Description</label>
                   <Textarea
                     id="description"
                     placeholder="Rich and creamy whole milk"
@@ -207,7 +205,7 @@ export default function ProductsPage() {
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="price">Price (₹)</Label>
+                    <label htmlFor="price">Price (₹)</label>
                     <Input
                       id="price"
                       type="number"
@@ -217,7 +215,7 @@ export default function ProductsPage() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="unit">Unit</Label>
+                    <label htmlFor="unit">Unit</label>
                     <Input
                       id="unit"
                       placeholder="Liter"
@@ -227,7 +225,7 @@ export default function ProductsPage() {
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="category">Category</Label>
+                  <label htmlFor="category">Category</label>
                   <Input
                     id="category"
                     placeholder="Fresh Milk"
@@ -236,6 +234,7 @@ export default function ProductsPage() {
                   />
                 </div>
                 <Button
+                hideIcon
                   className="w-full"
                   onClick={editingProduct ? handleUpdateProduct : handleAddProduct}
                   disabled={!formData.name || !formData.price || !formData.unit}
@@ -250,25 +249,26 @@ export default function ProductsPage() {
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {products.map((product) => (
             <Card key={product.id}>
-              <CardHeader>
+              <CardHeader className="pt-4">
                 <div className="flex items-start justify-between">
                   <div className="space-y-1">
                     <CardTitle>{product.name}</CardTitle>
                     <CardDescription>{product.description}</CardDescription>
                   </div>
-                  <Badge className={product.in_stock ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}>
+                  <div className={`rounded-full text-sm px-2 shrink-0 ${product.in_stock ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}>
                     {product.in_stock ? "In Stock" : "Out of Stock"}
-                  </Badge>
+                  </div>
                 </div>
               </CardHeader>
-              <CardContent>
+              <CardContent className="pb-4">
                 <div className="space-y-4">
                   <div className="flex items-baseline gap-2">
                     <span className="text-3xl font-bold">₹{product.price}</span>
-                    <span className="text-muted-foreground">/ {product.unit}</span>
+                    <span className="text-foreground">/ {product.unit}</span>
                   </div>
                   <div className="flex gap-2">
                     <Button
+                    hideIcon
                       size="sm"
                       variant="outline"
                       className="flex-1 bg-transparent"
@@ -278,6 +278,7 @@ export default function ProductsPage() {
                       Edit
                     </Button>
                     <Button
+                    hideIcon
                       size="sm"
                       variant="outline"
                       className="flex-1 text-red-600 hover:text-red-700 bg-transparent"

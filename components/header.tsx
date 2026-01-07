@@ -75,7 +75,7 @@ export function Header() {
             </Link>
           </nav>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 md:gap-4">
             <div>
               <Link
                 href="tel:123456789"
@@ -98,6 +98,7 @@ export function Header() {
             {/* Mobile Menu */}
             <div className="md:hidden">
               <Button
+              hideIcon
                 variant="ghost"
                 size="icon"
                 onClick={() => setMenuOpen(true)}
@@ -107,17 +108,17 @@ export function Header() {
 
               {menuOpen && (
                 <div
-                  className="fixed inset-0 z-50 flex"
+                  className="fixed inset-0 z-50 flex h-screen"
                   role="dialog"
                   aria-modal="true"
                 >
                   {/* Backdrop */}
                   <div
-                    className="fixed inset-0 bg-black/40 backdrop-blur-sm"
+                    className="fixed inset-0 bg-black/50 backdrop-blur-sm h-screen"
                     onClick={() => setMenuOpen(false)}
                   />
                   {/* Panel */}
-                  <div className="relative ml-auto w-64 max-w-full h-full bg-background p-6 shadow-lg transform transition-transform duration-200 ease-in-out">
+                  <div className="relative ml-auto w-64 max-w-full h-full bg-foreground p-6 shadow-lg transform transition-transform duration-200 ease-in-out">
                     <button
                       className="absolute top-4 right-4 p-1"
                       onClick={() => setMenuOpen(false)}

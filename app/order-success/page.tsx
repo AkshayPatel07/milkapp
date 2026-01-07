@@ -9,14 +9,14 @@ export default function OrderSuccessPage() {
       <div className="container mx-auto px-4">
         <div className="max-w-2xl mx-auto">
           <Card>
-            <CardContent className="pt-12 pb-8 text-center space-y-6">
+            <CardContent className="pt-6 md:pt-12 pb-6 md:pb-8 text-center space-y-6">
               <div className="mx-auto w-20 h-20 bg-green-100 rounded-full flex items-center justify-center">
                 <CheckCircle className="h-12 w-12 text-green-600" />
               </div>
 
               <div>
                 <h1 className="text-3xl font-bold mb-2">Order Placed Successfully!</h1>
-                <p className="text-muted-foreground">
+                <p className="text-foreground">
                   Thank you for your order. We'll deliver fresh milk to your doorstep.
                 </p>
               </div>
@@ -26,7 +26,7 @@ export default function OrderSuccessPage() {
                   <Package className="h-5 w-5 text-primary mt-0.5" />
                   <div>
                     <h3 className="font-semibold mb-1">Order Confirmation</h3>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm text-foreground">
                       You will receive a confirmation call from our team within 2 hours
                     </p>
                   </div>
@@ -36,7 +36,7 @@ export default function OrderSuccessPage() {
                   <Clock className="h-5 w-5 text-primary mt-0.5" />
                   <div>
                     <h3 className="font-semibold mb-1">Daily Delivery</h3>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm text-foreground">
                       Your milk will be delivered fresh every morning at your preferred time
                     </p>
                   </div>
@@ -46,7 +46,7 @@ export default function OrderSuccessPage() {
                   <Phone className="h-5 w-5 text-primary mt-0.5" />
                   <div>
                     <h3 className="font-semibold mb-1">Need Help?</h3>
-                    <p className="text-sm text-muted-foreground">Contact us at +91 12345 67890 for any queries</p>
+                    <p className="text-sm text-foreground">Contact us at +91 12345 67890 for any queries</p>
                   </div>
                 </div>
               </div>

@@ -62,7 +62,7 @@ function Button({
       { ...props, className: childClass },
       <>
         {(children.props as any)?.children}
-        <span className="bg-white p-2 rounded-full"> <ArrowRight /></span>
+        {!hideIcon && <span className="bg-white p-2 rounded-full"> <ArrowRight /></span> }
       </>
     );
   }

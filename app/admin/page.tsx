@@ -92,7 +92,7 @@ export default function AdminDashboard() {
     return (
       <div className="min-h-screen bg-muted/30">
         <AdminHeader />
-        <div className="container mx-auto px-4 py-8">
+        <div className="max-w-7xl mx-auto px-4 py-8">
           <div className="text-center">Loading...</div>
         </div>
       </div>
@@ -103,75 +103,75 @@ export default function AdminDashboard() {
     <div className="min-h-screen bg-muted/30">
       <AdminHeader />
 
-      <div className="container mx-auto px-4 py-8">
+      <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardHeader className="flex flex-row items-center justify-between pt-4">
               <CardTitle className="text-sm font-medium">Total Orders</CardTitle>
-              <ShoppingBag className="h-4 w-4 text-muted-foreground" />
+              <ShoppingBag className="h-4 w-4 text-foreground" />
             </CardHeader>
-            <CardContent>
+            <CardContent className="pb-4">
               <div className="text-2xl font-bold">{stats.totalOrders}</div>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xs text-foreground">
                 <span className="text-green-600 font-medium">+{stats.todayOrders}</span> today
               </p>
             </CardContent>
           </Card>
 
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardHeader className="flex flex-row items-center justify-between pt-4">
               <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
-              <IndianRupee className="h-4 w-4 text-muted-foreground" />
+              <IndianRupee className="h-4 w-4 text-foreground" />
             </CardHeader>
-            <CardContent>
+            <CardContent className="pb-4">
               <div className="text-2xl font-bold">₹{stats.totalRevenue.toLocaleString()}</div>
-              <p className="text-xs text-muted-foreground">Lifetime revenue</p>
+              <p className="text-xs text-foreground">Lifetime revenue</p>
             </CardContent>
           </Card>
 
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardHeader className="flex flex-row items-center justify-between pt-4">
               <CardTitle className="text-sm font-medium">Total Customers</CardTitle>
-              <Users className="h-4 w-4 text-muted-foreground" />
+              <Users className="h-4 w-4 text-foreground" />
             </CardHeader>
-            <CardContent>
+            <CardContent className="pb-4">
               <div className="text-2xl font-bold">{stats.totalCustomers}</div>
-              <p className="text-xs text-muted-foreground">Unique customers</p>
+              <p className="text-xs text-foreground">Unique customers</p>
             </CardContent>
           </Card>
 
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardHeader className="flex flex-row items-center justify-between pt-4">
               <CardTitle className="text-sm font-medium">Pending Orders</CardTitle>
-              <Clock className="h-4 w-4 text-muted-foreground" />
+              <Clock className="h-4 w-4 text-foreground" />
             </CardHeader>
-            <CardContent>
+            <CardContent className="pb-4">
               <div className="text-2xl font-bold">{stats.pendingOrders}</div>
-              <p className="text-xs text-muted-foreground">Need attention</p>
+              <p className="text-xs text-foreground">Need attention</p>
             </CardContent>
           </Card>
         </div>
 
         <div className="grid md:grid-cols-4 gap-4 mb-8">
-          <Button className="h-auto py-4 flex-col gap-2" asChild>
+          <Button hideIcon className="h-auto py-4 flex-col gap-2" asChild>
             <Link href="/admin/orders">
               <ShoppingBag className="h-5 w-5" />
               <span>Manage Orders</span>
             </Link>
           </Button>
-          <Button className="h-auto py-4 flex-col gap-2 bg-transparent" variant="outline" asChild>
+          <Button hideIcon className="h-auto py-4 flex-col gap-2 bg-transparent" variant="outline" asChild>
             <Link href="/admin/products">
               <Package className="h-5 w-5" />
               <span>Manage Products</span>
             </Link>
           </Button>
-          <Button className="h-auto py-4 flex-col gap-2 bg-transparent" variant="outline" asChild>
+          <Button hideIcon className="h-auto py-4 flex-col gap-2 bg-transparent" variant="outline" asChild>
             <Link href="/admin/customers">
               <Users className="h-5 w-5" />
               <span>View Customers</span>
             </Link>
           </Button>
-          <Button className="h-auto py-4 flex-col gap-2 bg-transparent" variant="outline" asChild>
+          <Button hideIcon className="h-auto py-4 flex-col gap-2 bg-transparent" variant="outline" asChild>
             <Link href="/admin/analytics">
               <TrendingUp className="h-5 w-5" />
               <span>Analytics</span>
@@ -181,19 +181,19 @@ export default function AdminDashboard() {
 
         <Card>
           <CardHeader>
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between pt-4">
               <div>
                 <CardTitle>Recent Orders</CardTitle>
                 <CardDescription>Latest orders from your customers</CardDescription>
               </div>
-              <Button asChild variant="outline" size="sm">
+              <Button hideIcon asChild variant="outline" className="pr-4 text-sm">
                 <Link href="/admin/orders">View All</Link>
               </Button>
             </div>
           </CardHeader>
-          <CardContent>
+          <CardContent className="pb-4">
             {recentOrders.length === 0 ? (
-              <div className="text-center py-8 text-muted-foreground">No orders yet</div>
+              <div className="text-center py-8 text-foreground">No orders yet</div>
             ) : (
               <div className="space-y-4">
                 {recentOrders.map((order) => (
@@ -217,11 +217,11 @@ export default function AdminDashboard() {
                         </span>
                       </div>
                       <p className="text-sm font-medium">{order.customer_name}</p>
-                      <p className="text-sm text-muted-foreground">{order.city}</p>
+                      <p className="text-sm text-foreground">{order.city}</p>
                     </div>
                     <div className="text-right space-y-1">
                       <p className="font-semibold">₹{order.total_amount}</p>
-                      <p className="text-xs text-muted-foreground">{getTimeAgo(order.created_at)}</p>
+                      <p className="text-xs text-foreground">{getTimeAgo(order.created_at)}</p>
                     </div>
                   </div>
                 ))}

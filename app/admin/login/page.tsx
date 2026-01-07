@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+
 import { Milk, AlertCircle } from "lucide-react"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 
@@ -59,7 +59,7 @@ export default function AdminLoginPage() {
             )}
 
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <label htmlFor="email">Email</label>
               <Input
                 id="email"
                 type="email"
@@ -71,7 +71,7 @@ export default function AdminLoginPage() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <label htmlFor="password">Password</label>
               <Input
                 id="password"
                 type="password"
@@ -86,7 +86,7 @@ export default function AdminLoginPage() {
               {isLoading ? "Signing In..." : "Sign In"}
             </Button>
 
-            <div className="text-sm text-muted-foreground text-center mt-4 p-3 bg-muted/50 rounded-md">
+            <div className="text-sm text-foreground text-center mt-4 p-3 bg-muted/50 rounded-md">
               <p className="font-semibold mb-1">Default Credentials:</p>
               <p>Email: admin@freshmilk.com</p>
               <p>Password: admin123</p>
