@@ -13,9 +13,9 @@ const anek = Anek_Bangla({
 })
 
 export const metadata: Metadata = {
-  title: "FreshMilk - Pure Farm-Fresh Milk Delivery in Surat & Navsari",
+  title: "FreshMilk - Pure Farm-Fresh Milk Delivery in Navsari",
   description:
-    "Get 100% pure, farm-fresh milk delivered daily to your doorstep in Surat and Navsari. Quality you can trust, convenience you love.",
+    "Get 100% pure, farm-fresh milk delivered daily to your doorstep in Navsari. Quality you can trust, convenience you love.",
   generator: "v0.app",
   icons: {
     icon: [

@@ -2,20 +2,29 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart, Menu, Milk, PhoneIcon } from "lucide-react";
+import { ShoppingCart, Menu, Milk, PhoneIcon, User } from "lucide-react";
 import { useCart } from "@/hooks/use-cart";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { BUSINESS_PHONE_E164, BUSINESS_PHONE_DISPLAY } from "@/lib/config";
 
 export function Header() {
   const { items } = useCart();
   const cartCount = items.reduce((sum, item) => sum + item.quantity, 0);
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const isActive = (path: string) =>
     path === "/" ? pathname === "/" : pathname?.startsWith(path);
+
+  useEffect(() => {
+    fetch("/api/auth/me", { cache: "no-store" })
+      .then((r) => r.json())
+      .then((data) => setIsLoggedIn(Boolean(data?.user)))
+      .catch(() => setIsLoggedIn(false));
+  }, []);
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-foreground backdrop-blur text-white">
@@ -77,12 +86,21 @@ export function Header() {
           <div className="flex items-center gap-2 md:gap-4">
             <div>
               <Link
-                href="tel:123456789"
+                href={`tel:${BUSINESS_PHONE_E164}`}
                 className="flex items-center gap-2 text-base font-medium hover:text-primary transition-colors"
               >
-                <PhoneIcon className="h-5 w-5" /> 123456789
+                <PhoneIcon className="h-5 w-5" /> {BUSINESS_PHONE_DISPLAY}
               </Link>
             </div>
+
+            <Link
+              href={isLoggedIn ? "/account" : "/login"}
+              className="hidden md:flex items-center gap-2 text-base font-medium hover:text-primary transition-colors"
+            >
+              <User className="h-5 w-5" />
+              {isLoggedIn ? "Account" : "Login"}
+            </Link>
+
             <div className="relative">
               <Link href="/cart">
                 <ShoppingCart className="h-5 w-5" />
@@ -154,6 +172,13 @@ export function Header() {
                         className="text-lg font-medium hover:text-primary transition-colors"
                       >
                         Contact
+                      </Link>
+                      <Link
+                        href={isLoggedIn ? "/account" : "/login"}
+                        onClick={() => setMenuOpen(false)}
+                        className="text-lg font-medium hover:text-primary transition-colors"
+                      >
+                        {isLoggedIn ? "Account" : "Login"}
                       </Link>
                     </nav>
                   </div>

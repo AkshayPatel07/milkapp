@@ -3,7 +3,7 @@ import { useEffect, useState } from "react"
 import Link from "next/link"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Package, ShoppingBag, Users, TrendingUp, IndianRupee, Clock } from "lucide-react"
+import { Package, ShoppingBag, Users, TrendingUp, IndianRupee, Clock, ClipboardList, Droplets } from "lucide-react"
 import { AdminHeader } from "@/components/admin-header"
 import { createClient } from "@/lib/supabase/client"
 
@@ -175,6 +175,18 @@ export default function AdminDashboard() {
             <Link href="/admin/analytics">
               <TrendingUp className="h-5 w-5" />
               <span>Analytics</span>
+            </Link>
+          </Button>
+          <Button hideIcon className="h-auto py-4 flex-col gap-2 bg-transparent" variant="outline" asChild>
+            <Link href="/admin/inventory">
+              <Droplets className="h-5 w-5" />
+              <span>Inventory</span>
+            </Link>
+          </Button>
+          <Button hideIcon className="h-auto py-4 flex-col gap-2 bg-transparent" variant="outline" asChild>
+            <Link href="/admin/activity">
+              <ClipboardList className="h-5 w-5" />
+              <span>Activity</span>
             </Link>
           </Button>
         </div>

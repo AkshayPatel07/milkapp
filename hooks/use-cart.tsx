@@ -4,7 +4,7 @@ import { create } from "zustand"
 import { persist } from "zustand/middleware"
 
 export interface CartItem {
-  id: number
+  id: string
   name: string
   price: number
   quantity: number
@@ -14,10 +14,10 @@ export interface CartItem {
 interface CartStore {
   items: CartItem[]
   addToCart: (item: CartItem) => void
-  removeFromCart: (id: number) => void
-  updateQuantity: (id: number, quantity: number) => void
+  removeFromCart: (id: string) => void
+  updateQuantity: (id: string, quantity: number) => void
   clearCart: () => void
-  getItemQuantity: (id: number) => number
+  getItemQuantity: (id: string) => number
   total: number
 }
 
@@ -29,10 +29,13 @@ export const useCart = create<CartStore>()(
 
       addToCart: (item) =>
         set((state) => {
-          const existingItem = state.items.find((i) => i.id === item.id)
+          const nextItem: CartItem = { ...item, id: String(item.id) }
+          const existingItem = state.items.find((i) => String(i.id) === nextItem.id)
           const newItems = existingItem
-            ? state.items.map((i) => (i.id === item.id ? { ...i, quantity: i.quantity + item.quantity } : i))
-            : [...state.items, item]
+            ? state.items.map((i) =>
+                String(i.id) === nextItem.id ? { ...i, quantity: i.quantity + nextItem.quantity } : i,
+              )
+            : [...state.items, nextItem]
 
           return {
             items: newItems,
@@ -42,7 +45,7 @@ export const useCart = create<CartStore>()(
 
       removeFromCart: (id) =>
         set((state) => {
-          const newItems = state.items.filter((item) => item.id !== id)
+          const newItems = state.items.filter((item) => String(item.id) !== String(id))
           return {
             items: newItems,
             total: newItems.reduce((sum, i) => sum + i.price * i.quantity, 0),
@@ -52,14 +55,16 @@ export const useCart = create<CartStore>()(
       updateQuantity: (id, quantity) =>
         set((state) => {
           if (quantity <= 0) {
-            const newItems = state.items.filter((item) => item.id !== id)
+            const newItems = state.items.filter((item) => String(item.id) !== String(id))
             return {
               items: newItems,
               total: newItems.reduce((sum, i) => sum + i.price * i.quantity, 0),
             }
           }
 
-          const newItems = state.items.map((item) => (item.id === id ? { ...item, quantity } : item))
+          const newItems = state.items.map((item) =>
+            String(item.id) === String(id) ? { ...item, quantity } : item,
+          )
           return {
             items: newItems,
             total: newItems.reduce((sum, i) => sum + i.price * i.quantity, 0),
@@ -69,7 +74,7 @@ export const useCart = create<CartStore>()(
       clearCart: () => set({ items: [], total: 0 }),
 
       getItemQuantity: (id) => {
-        const item = get().items.find((i) => i.id === id)
+        const item = get().items.find((i) => String(i.id) === String(id))
         return item ? item.quantity : 0
       },
     }),

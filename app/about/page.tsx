@@ -38,7 +38,7 @@ export default function AboutPage() {
               <h2 className="text-3xl md:text-4xl font-bold">Our Story</h2>
               <p className="leading-relaxed">
                 FreshMilk started with a simple mission: to provide families in
-                Surat and Navsari with access to pure, farm-fresh milk. We
+                Navsari with access to pure, farm-fresh milk. We
                 believe that quality milk is the foundation of a healthy
                 lifestyle, and we're dedicated to maintaining the highest
                 standards in dairy farming and delivery.

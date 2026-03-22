@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
 import MarqueeSection from "@/components/CommonComponents/MarqueeSection";
+import { BUSINESS_PHONE_DISPLAY } from "@/lib/config";
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -86,7 +87,7 @@ export default function ContactPage() {
                       <p className="text-foreground text-sm mb-1">
                         Monday to Sunday, 6 AM - 9 PM
                       </p>
-                      <p className="font-medium">+91 12345 67890</p>
+                      <p className="font-medium">{BUSINESS_PHONE_DISPLAY}</p>
                     </div>
                   </CardContent>
                 </Card>
@@ -106,20 +107,7 @@ export default function ContactPage() {
                   </CardContent>
                 </Card>
 
-                {/* <Card>
-                  <CardContent className="p-4 md:p-6 flex items-start gap-4">
-                    <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center flex-shrink-0">
-                      <MapPin className="h-6 w-6 text-orange-600" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold mb-1">Service Areas</h3>
-                      <p className="text-foreground text-sm">
-                        Currently delivering in:
-                      </p>
-                      <p className="font-medium">Surat & Navsari</p>
-                    </div>
-                  </CardContent>
-                </Card> */}
+
 
                 <Card>
                   <CardContent className="p-4 md:p-6 flex items-start gap-4">
@@ -190,7 +178,7 @@ export default function ContactPage() {
                           type="tel"
                           value={formData.phone}
                           onChange={handleChange}
-                          placeholder="+91 12345 67890"
+                          placeholder={BUSINESS_PHONE_DISPLAY}
                         />
                       </div>
 

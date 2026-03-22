@@ -1,12 +1,13 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Plus, Minus, ShoppingCart, Loader2 } from "lucide-react"
+import { Plus, Minus, Loader2, MessageCircle } from "lucide-react"
 import { useCart } from "@/hooks/use-cart"
 import { createClient } from "@/lib/supabase/client"
+import { SERVICE_CITY } from "@/lib/config"
+import { openWhatsApp } from "@/lib/whatsapp"
 
 interface Product {
   id: string
@@ -20,18 +21,20 @@ interface Product {
 }
 
 export default function ProductsPage() {
-  const [selectedCity, setSelectedCity] = useState<string>("")
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   const { addToCart, getItemQuantity, updateQuantity } = useCart()
 
   useEffect(() => {
     async function loadProducts() {
+      setError(null)
       const supabase = createClient()
       const { data, error } = await supabase.from("products").select("*").eq("in_stock", true).order("name")
 
       if (error) {
         console.error("Error loading products:", error)
+        setError(error.message || "Failed to load products")
       } else {
         setProducts(data || [])
       }
@@ -50,19 +53,7 @@ export default function ProductsPage() {
           <p className="text-lg text-foreground max-w-2xl mx-auto mb-8">
             Choose from our range of fresh, pure milk products delivered daily to your doorstep
           </p>
-
-          {/* City Selection */}
-          <div className="max-w-md mx-auto">
-            <Select value={selectedCity} onValueChange={setSelectedCity}>
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Select your city for delivery" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="surat">Surat</SelectItem>
-                <SelectItem value="navsari">Navsari</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+          <p className="text-sm text-foreground">Currently selling only in {SERVICE_CITY}.</p>
         </div>
 
         {/* Products Grid */}
@@ -70,10 +61,27 @@ export default function ProductsPage() {
           <div className="flex justify-center items-center py-12">
             <Loader2 className="h-8 w-8 animate-spin" />
           </div>
-        ) : selectedCity ? (
+        ) : error ? (
+          <div className="text-center py-12">
+            <p className="text-lg text-destructive mb-2">Products not available right now</p>
+            <p className="text-sm text-foreground">{error}</p>
+            <p className="text-sm text-foreground mt-4">
+              If you are the owner, add products from <span className="font-medium">Admin → Products</span> or run the seed SQL.
+            </p>
+          </div>
+        ) : products.length === 0 ? (
+          <div className="text-center py-12">
+            <p className="text-lg text-foreground">No products found.</p>
+            <p className="text-sm text-foreground mt-2">If you are the owner, add products from Admin → Products.</p>
+          </div>
+        ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {products.map((product) => {
               const quantity = getItemQuantity(product.id)
+              const sendWhatsApp = (qty: number) => {
+                const message = `Hello FreshMilk,\n\nI want to order:\n- ${product.name} x ${qty} (${product.unit})\n\nDelivery city: ${SERVICE_CITY}\nPlease confirm price and delivery time.`
+                openWhatsApp(message)
+              }
               return (
                 <Card key={product.id} className="overflow-hidden">
                   <CardHeader className="p-0">
@@ -96,41 +104,69 @@ export default function ProductsPage() {
                   </CardContent>
                   <CardFooter className="p-6 pt-0">
                     {quantity === 0 ? (
-                      <Button
-                        className="w-full"
-                        hideIcon
-                        onClick={() =>
-                          addToCart({
-                            id: product.id,
-                            name: product.name,
-                            price: product.price,
-                            quantity: 1,
-                            image: product.image_url,
-                          })
-                        }
-                      >
-                        <ShoppingCart className="mr-2 h-4 w-4" />
-                        Add to Cart
-                      </Button>
+                      <div className="flex flex-col gap-3 w-full">
+                        <Button
+                          className="w-full"
+                          hideIcon
+                          onClick={() =>
+                            addToCart({
+                              id: product.id,
+                              name: product.name,
+                              price: product.price,
+                              quantity: 1,
+                              image: product.image_url,
+                            })
+                          }
+                        >
+                          Add to Cart
+                        </Button>
+                        <Button className="w-full" hideIcon variant="outline" onClick={() => sendWhatsApp(1)}>
+                          <MessageCircle className="mr-2 h-4 w-4" />
+                          WhatsApp Order
+                        </Button>
+                      </div>
                     ) : (
-                      <div className="flex items-center gap-2 w-full">
-                        <button className="bg-white w-7 h-7 flex items-center justify-center rounded-full shadow cursor-pointer" onClick={() => updateQuantity(product.id, quantity - 1)}>
-                          <Minus className="h-4 w-4" />
-                        </button>
-                        <span className="flex-1 text-center font-semibold">{quantity}</span>
-                        <button className="bg-white w-7 h-7 flex items-center justify-center rounded-full shadow cursor-pointer" onClick={() => updateQuantity(product.id, quantity + 1)}>
-                          <Plus className="h-4 w-4" />
-                        </button>
+                      <div className="flex flex-col gap-3 w-full">
+                        <div className="flex items-center gap-2 w-full">
+                          <button
+                            className="bg-white w-7 h-7 flex items-center justify-center rounded-full shadow cursor-pointer"
+                            onClick={() => updateQuantity(product.id, quantity - 1)}
+                          >
+                            <Minus className="h-4 w-4" />
+                          </button>
+                          <span className="flex-1 text-center font-semibold">{quantity}</span>
+                          <button
+                            className="bg-white w-7 h-7 flex items-center justify-center rounded-full shadow cursor-pointer"
+                            onClick={() => updateQuantity(product.id, quantity + 1)}
+                          >
+                            <Plus className="h-4 w-4" />
+                          </button>
+                        </div>
+                        <Button
+                          className="w-full"
+                          hideIcon
+                          onClick={() =>
+                            addToCart({
+                              id: product.id,
+                              name: product.name,
+                              price: product.price,
+                              quantity: 1,
+                              image: product.image_url,
+                            })
+                          }
+                        >
+                          Add One More
+                        </Button>
+                        <Button className="w-full" hideIcon variant="outline" onClick={() => sendWhatsApp(quantity)}>
+                          <MessageCircle className="mr-2 h-4 w-4" />
+                          WhatsApp this order
+                        </Button>
                       </div>
                     )}
                   </CardFooter>
                 </Card>
               )
             })}
-          </div>
-        ) : (
-          <div className="text-center py-12">
-            <p className="text-lg text-foreground">Please select your city to view available products</p>
           </div>
         )}
       </div>

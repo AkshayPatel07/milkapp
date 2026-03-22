@@ -3,11 +3,19 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { useCart } from "@/hooks/use-cart"
-import { Trash2, Plus, Minus, ShoppingBag } from "lucide-react"
+import { Trash2, Plus, Minus, ShoppingBag, MessageCircle } from "lucide-react"
 import Link from "next/link"
+import { openWhatsApp } from "@/lib/whatsapp"
+import { SERVICE_CITY } from "@/lib/config"
 
 export default function CartPage() {
   const { items, updateQuantity, removeFromCart, total } = useCart()
+
+  const whatsappCart = () => {
+    const lines = items.map((i) => `- ${i.name} x ${i.quantity}`)
+    const message = `Hello FreshMilk,\n\nI want to order:\n${lines.join("\n")}\n\nDelivery city: ${SERVICE_CITY}\nTotal: ₹${total}\nPlease confirm price and delivery time.`
+    openWhatsApp(message)
+  }
 
   if (items.length === 0) {
     return (
@@ -104,6 +112,10 @@ export default function CartPage() {
                 </div>
                 <Button className="w-full" size="lg" asChild>
                   <Link href="/checkout">Proceed to Checkout</Link>
+                </Button>
+                <Button className="w-full" size="lg" variant="outline" hideIcon onClick={whatsappCart}>
+                  <MessageCircle className="h-4 w-4 mr-2" />
+                  WhatsApp Order
                 </Button>
               </CardContent>
             </Card>

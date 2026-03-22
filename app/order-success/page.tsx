@@ -2,6 +2,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { CheckCircle, Package, Clock, Phone } from "lucide-react"
+import { BUSINESS_PHONE_DISPLAY } from "@/lib/config"
 
 export default function OrderSuccessPage() {
   return (
@@ -46,7 +47,7 @@ export default function OrderSuccessPage() {
                   <Phone className="h-5 w-5 text-primary mt-0.5" />
                   <div>
                     <h3 className="font-semibold mb-1">Need Help?</h3>
-                    <p className="text-sm text-foreground">Contact us at +91 12345 67890 for any queries</p>
+                    <p className="text-sm text-foreground">Contact us at {BUSINESS_PHONE_DISPLAY} for any queries</p>
                   </div>
                 </div>
               </div>

@@ -61,18 +61,23 @@ export default function ProductsPage() {
 
   const handleAddProduct = async () => {
     try {
-      const supabase = createClient()
-      const { error } = await supabase.from("products").insert({
-        name: formData.name,
-        description: formData.description,
-        price: Number.parseFloat(formData.price),
-        unit: formData.unit,
-        category: formData.category,
-        in_stock: true,
-        image_url: "/placeholder.svg?height=200&width=200",
+      const res = await fetch("/api/admin/products", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          name: formData.name,
+          description: formData.description,
+          price: Number.parseFloat(formData.price),
+          unit: formData.unit,
+          category: formData.category,
+          in_stock: true,
+          image_url: "/placeholder.svg?height=200&width=200",
+        }),
       })
-
-      if (error) throw error
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}))
+        throw new Error(body?.error || "Failed to add product")
+      }
 
       // Reload products
       await loadProducts()
@@ -88,19 +93,23 @@ export default function ProductsPage() {
     if (!editingProduct) return
 
     try {
-      const supabase = createClient()
-      const { error } = await supabase
-        .from("products")
-        .update({
+      const res = await fetch("/api/admin/products", {
+        method: "PATCH",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          id: editingProduct.id,
           name: formData.name,
           description: formData.description,
           price: Number.parseFloat(formData.price),
           unit: formData.unit,
           category: formData.category,
-        })
-        .eq("id", editingProduct.id)
+        }),
+      })
 
-      if (error) throw error
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}))
+        throw new Error(body?.error || "Failed to update product")
+      }
 
       await loadProducts()
       setDialogOpen(false)
@@ -116,10 +125,11 @@ export default function ProductsPage() {
     if (!confirm("Are you sure you want to delete this product?")) return
 
     try {
-      const supabase = createClient()
-      const { error } = await supabase.from("products").delete().eq("id", productId)
-
-      if (error) throw error
+      const res = await fetch(`/api/admin/products?id=${encodeURIComponent(productId)}`, { method: "DELETE" })
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}))
+        throw new Error(body?.error || "Failed to delete product")
+      }
 
       await loadProducts()
     } catch (error) {

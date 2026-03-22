@@ -19,11 +19,11 @@ export default function HomePage() {
     <div className="min-h-screen">
       {/* Hero Section */}
       <section className="relative bg-foreground text-white">
-        <div className="max-w-7xl mx-auto px-4 py-12 md:py-24">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div className="space-y-6">
               <div className="flex items-center gap-2 mb-4 text-sm font-semibold text-primary">
-                ✦{" "}
+                *{" "}
                 <span className="uppercase tracking-widest text-white">
                   Pure dairy Goodness
                 </span>
@@ -32,8 +32,8 @@ export default function HomePage() {
                 Pure Farm-Fresh Milk Delivered to Your Doorstep
               </h1>
               <p className="text-lg text-white">
-                Get 100% pure, farm-fresh milk delivered daily in Surat and
-                Navsari. Quality you can trust, convenience you'll love.
+                Get 100% pure, farm-fresh milk delivered daily in Navsari.
+                Quality you can trust, convenience you'll love.
               </p>
               <div className="flex flex-wrap gap-4">
                 <Button size="lg" className="text-lg">
@@ -43,7 +43,7 @@ export default function HomePage() {
               <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-6 md:pt-4">
                 <div className="flex items-center gap-2">
                   <MapPin className="h-5 w-5 text-green-600" />
-                  <span className="font-medium">Surat & Navsari</span>
+                  <span className="font-medium">Navsari</span>
                 </div>
                 <div className="flex items-center gap-1">
                   <Star className="h-5 w-5 fill-primary text-primary" />
@@ -73,8 +73,8 @@ export default function HomePage() {
       <AboutSection />  
 
       {/* Features Section */}
-      <section className="py-12 md:py-24 bg-foreground text-white">
-        <div className="max-w-7xl mx-auto px-4">
+      <section className="py-16 md:py-24 bg-foreground text-white">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8 md:mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
               Why Choose Us?
@@ -147,14 +147,14 @@ export default function HomePage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-12">
-        <div className="container mx-auto px-4 text-center">
+      <section className="py-16">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
             Ready to Start Your Daily Delivery?
           </h2>
           <p className="text-lg mb-8 max-w-2xl mx-auto">
-            Join thousands of happy families in Surat and Navsari enjoying
-            fresh, pure milk every day
+            Join thousands of happy families in Navsari enjoying fresh, pure
+            milk every day
           </p>
           <Button size="lg" className="text-lg">
             <Link href="/products">View Products</Link>

@@ -1,5 +1,6 @@
 import Link from "next/link"
 import { Milk, Phone, Mail, MapPin } from "lucide-react"
+import { BUSINESS_PHONE_DISPLAY, SERVICE_CITY } from "@/lib/config"
 
 export function Footer() {
   return (
@@ -14,7 +15,7 @@ export function Footer() {
               <span>FreshMilk</span>
             </Link>
             <p className="text-sm text-white">
-              Delivering pure, farm-fresh milk to your doorstep daily in Surat and Navsari.
+              Delivering pure, farm-fresh milk to your doorstep daily in {SERVICE_CITY}.
             </p>
           </div>
 
@@ -44,11 +45,7 @@ export function Footer() {
             <ul className="space-y-2 text-sm text-white">
               <li className="flex items-center gap-2">
                 <MapPin className="h-4 w-4" />
-                Surat
-              </li>
-              <li className="flex items-center gap-2">
-                <MapPin className="h-4 w-4" />
-                Navsari
+                {SERVICE_CITY}
               </li>
             </ul>
           </div>
@@ -58,7 +55,7 @@ export function Footer() {
             <ul className="space-y-2 text-sm text-white">
               <li className="flex items-center gap-2">
                 <Phone className="h-4 w-4" />
-                +91 12345 67890
+                {BUSINESS_PHONE_DISPLAY}
               </li>
               <li className="flex items-center gap-2">
                 <Mail className="h-4 w-4" />

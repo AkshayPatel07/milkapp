@@ -1,7 +1,7 @@
--- Insert default admin account (password: admin123)
--- Password hash generated using bcrypt with salt rounds 10
+-- Insert default admin account (password: Admin@123)
+-- Password hash generated using app scrypt format (lib/auth/password.ts)
 INSERT INTO public.admins (email, password_hash, name)
-VALUES ('admin@freshmilk.com', '$2a$10$rQ6P9p5KzP0YxGKJXZ5Z1.xJZ5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z', 'Admin User')
+VALUES ('admin@freshmilk.com', 'scrypt$R3SpZHYjcJHEMMUHgaUN4w==$1B9zT/gpdsRcLi7yL6g57DinoDdJB5ZDE9O/FLgpiqbeSFHKXykl7jfy63lKp/toMFalGT3i0mNPj/K8QmSjRg==', 'Admin User')
 ON CONFLICT (email) DO NOTHING;
 
 -- Insert sample products

@@ -33,7 +33,6 @@ export default function AnalyticsPage() {
   ]
 
   const cityData = [
-    { city: "Surat", orders: 152, revenue: 24800 },
     { city: "Navsari", orders: 95, revenue: 18000 },
   ]
 

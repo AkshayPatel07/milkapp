@@ -161,7 +161,6 @@ export default function OrdersPage() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Cities</SelectItem>
-                  <SelectItem value="surat">Surat</SelectItem>
                   <SelectItem value="navsari">Navsari</SelectItem>
                 </SelectContent>
               </Select>

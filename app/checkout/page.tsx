@@ -14,6 +14,7 @@ import { useCart } from "@/hooks/use-cart"
 import { ShoppingBag, CreditCard, Truck, MapPin } from "lucide-react"
 import Link from "next/link"
 import { createClient } from "@/lib/supabase/client"
+import { BUSINESS_PHONE_DISPLAY, SERVICE_CITY } from "@/lib/config"
 
 export default function CheckoutPage() {
   const { items, total, clearCart } = useCart()
@@ -25,7 +26,7 @@ export default function CheckoutPage() {
     phone: "",
     email: "",
     address: "",
-    city: "",
+    city: SERVICE_CITY,
     pincode: "",
     deliveryTime: "",
     paymentMethod: "cod",
@@ -179,7 +180,7 @@ export default function CheckoutPage() {
                         value={formData.phone}
                         onChange={handleInputChange}
                         required
-                        placeholder="+91 12345 67890"
+                        placeholder={BUSINESS_PHONE_DISPLAY}
                       />
                     </div>
                   </div>
@@ -222,19 +223,7 @@ export default function CheckoutPage() {
                   <div className="grid md:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <label htmlFor="city">City *</label>
-                      <Select
-                        value={formData.city}
-                        onValueChange={(value) => setFormData({ ...formData, city: value })}
-                        required
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select city" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="Surat">Surat</SelectItem>
-                          <SelectItem value="Navsari">Navsari</SelectItem>
-                        </SelectContent>
-                      </Select>
+                      <Input value={SERVICE_CITY} disabled />
                     </div>
                     <div className="space-y-2">
                       <label htmlFor="pincode">Pincode *</label>
