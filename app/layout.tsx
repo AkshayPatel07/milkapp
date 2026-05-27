@@ -4,6 +4,7 @@ import { Anek_Bangla, Geist, Geist_Mono } from "next/font/google"
 import "./globals.css"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
+import { Suspense } from "react"
 
 const anek = Anek_Bangla({
   subsets: ["bengali", "latin"],
@@ -44,7 +45,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${anek.className} antialiased flex flex-col min-h-screen`}>
-        <Header />
+        <Suspense fallback={null}>
+          <Header />
+        </Suspense>
         <main className="flex-1">{children}</main>
         <Footer />
       </body>

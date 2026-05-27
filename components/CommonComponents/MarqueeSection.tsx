@@ -10,11 +10,11 @@ const marqueeItems = [
 
 const MarqueeSection = () => {
   return (
-    <section className="bg-primary py-6 overflow-x-hidden">
+    <section className="bg-primary py-4 overflow-x-hidden">
         <div className="marquee__track">
           {[...marqueeItems, ...marqueeItems].map((item, index) => (
             <span
-              className="flex items-center text-foreground text-2xl font-semibold whitespace-nowrap"
+              className="flex items-center text-white text-xl font-semibold whitespace-nowrap"
               key={`${item.id}-${index}`}
             >
               <img src="/icon-star.svg" className="mx-5" />

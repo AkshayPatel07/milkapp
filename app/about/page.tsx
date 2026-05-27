@@ -68,7 +68,7 @@ export default function AboutPage() {
             </Card>
 
             <Card>
-              <CardContent className="p-4 md:p-6 text-center space-y-4 bg-primary rounded-xl">
+              <CardContent className="p-4 md:p-6 text-center space-y-4 bg-primary rounded-xl text-white">
                 <div className="mx-auto w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
                   <Award className="h-6 w-6 text-blue-600" />
                 </div>
@@ -93,7 +93,7 @@ export default function AboutPage() {
             </Card>
 
             <Card>
-              <CardContent className="p-4 md:p-6 text-center space-y-4 bg-primary rounded-xl">
+              <CardContent className="p-4 md:p-6 text-center space-y-4 bg-primary rounded-xl text-white">
                 <div className="mx-auto w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
                   <Users className="h-6 w-6 text-purple-600" />
                 </div>
@@ -123,26 +123,26 @@ export default function AboutPage() {
                 Spreading wellness with every drop of milk
               </h2>
               <div className="grid grid-cols-2 gap-5 text-center">
-                <div className="p-4 md:p-6 rounded-2xl text-center space-y-4 bg-muted-foreground h-full">
-                  <div className="text-3xl md:text-4xl font-bold text-primary">
+                <div className="p-4 md:p-6 rounded-2xl text-center space-y-4 bg-primary h-full">
+                  <div className="text-3xl md:text-4xl font-bold text-white">
                     5000+
                   </div>
                   <div className="text-muted">Happy Families</div>
                 </div>
-                <div className="p-4 md:p-6 rounded-2xl text-center space-y-4 bg-muted-foreground h-full">
-                  <div className="text-3xl md:text-4xl font-bold text-primary">
+                <div className="p-4 md:p-6 rounded-2xl text-center space-y-4 bg-primary h-full">
+                  <div className="text-3xl md:text-4xl font-bold text-white">
                     10000+
                   </div>
                   <div className="text-muted">
                     Liters Delivered Daily
                   </div>
                 </div>
-                <div className="p-4 md:p-6 rounded-2xl text-center space-y-4 bg-muted-foreground h-full">
-                  <div className="text-3xl md:text-4xl font-bold text-primary">2</div>
+               <div className="p-4 md:p-6 rounded-2xl text-center space-y-4 bg-primary h-full">
+                  <div className="text-3xl md:text-4xl font-bold text-white">2</div>
                   <div className="text-muted">Cities Served</div>
                 </div>
-                <div className="p-4 md:p-6 rounded-2xl text-center space-y-4 bg-muted-foreground h-full">
-                  <div className="text-3xl md:text-4xl font-bold text-primary">
+                <div className="p-4 md:p-6 rounded-2xl text-center space-y-4 bg-primary h-full">
+                  <div className="text-3xl md:text-4xl font-bold text-white">
                     100%
                   </div>
                   <div className="text-muted">

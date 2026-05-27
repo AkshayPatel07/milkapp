@@ -2,192 +2,507 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart, Menu, Milk, PhoneIcon, User } from "lucide-react";
+import {
+  ShoppingCart,
+  Menu,
+  Milk,
+  PhoneIcon,
+  User,
+  Search,
+} from "lucide-react";
 import { useCart } from "@/hooks/use-cart";
 import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
+import {
+  usePathname,
+  useRouter,
+  useSearchParams,
+} from "next/navigation";
 import { cn } from "@/lib/utils";
-import { BUSINESS_PHONE_E164, BUSINESS_PHONE_DISPLAY } from "@/lib/config";
+import {
+  BUSINESS_PHONE_E164,
+  BUSINESS_PHONE_DISPLAY,
+} from "@/lib/config";
+import { Input } from "@/components/ui/input";
 
 export function Header() {
   const { items } = useCart();
-  const cartCount = items.reduce((sum, item) => sum + item.quantity, 0);
-  const [menuOpen, setMenuOpen] = useState(false);
+
+  const cartCount = items.reduce(
+    (sum, item) => sum + item.quantity,
+    0,
+  );
+
+  const [menuOpen, setMenuOpen] =
+    useState(false);
+
   const pathname = usePathname();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const searchParams =
+    useSearchParams();
+  const router = useRouter();
+
+  const [isLoggedIn, setIsLoggedIn] =
+    useState(false);
+
+  const [productQuery, setProductQuery] =
+    useState("");
 
   const isActive = (path: string) =>
-    path === "/" ? pathname === "/" : pathname?.startsWith(path);
+    path === "/"
+      ? pathname === "/"
+      : pathname?.startsWith(path);
 
   useEffect(() => {
-    fetch("/api/auth/me", { cache: "no-store" })
+    fetch("/api/auth/me", {
+      cache: "no-store",
+    })
       .then((r) => r.json())
-      .then((data) => setIsLoggedIn(Boolean(data?.user)))
-      .catch(() => setIsLoggedIn(false));
+      .then((data) =>
+        setIsLoggedIn(
+          Boolean(data?.user),
+        ),
+      )
+      .catch(() =>
+        setIsLoggedIn(false),
+      );
   }, []);
 
+  useEffect(() => {
+    const q =
+      searchParams?.get("q") || "";
+
+    setProductQuery(q);
+  }, [searchParams]);
+
+  const submitProductSearch = (
+    raw: string,
+  ) => {
+    const q = raw.trim();
+
+    if (!q) {
+      router.push("/products");
+      return;
+    }
+
+    router.push(
+      `/products?q=${encodeURIComponent(
+        q,
+      )}`,
+    );
+  };
+
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-foreground backdrop-blur text-white">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="flex h-16 items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 font-semibold text-xl">
+    <header className="sticky top-0 z-50 w-full border-b bg-background backdrop-blur text-primary">
+
+      <div className="max-w-6xl mx-auto px-4 py-3">
+
+        {/* Top Header */}
+        <div className="flex items-center justify-between gap-4">
+
+          <Link
+            href="/"
+            className="flex items-center gap-2 font-semibold text-xl"
+          >
             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
               <Milk className="h-5 w-5 text-white" />
             </div>
-            <span>FreshMilk</span>
+
+            <span>
+              FreshMilk
+            </span>
           </Link>
-          
-          <nav className="hidden md:flex items-center gap-6">
-            <Link
-              href="/"
-              className={cn(
-                "text-base font-medium hover:text-primary transition-colors",
-                isActive("/") && "text-primary font-semibold"
-              )}
-              aria-current={isActive("/") ? "page" : undefined}
-            >
-              Home
-            </Link>
 
-            <Link
-              href="/products"
-              className={cn(
-                "text-base font-medium hover:text-primary transition-colors",
-                isActive("/products") && "text-primary font-semibold"
-              )}
-              aria-current={isActive("/products") ? "page" : undefined}
-            >
-              Products
-            </Link>
+          {/* Desktop Search */}
+          <div className="flex-1 max-w-[50%]">
 
-            <Link
-              href="/about"
-              className={cn(
-                "text-base font-medium hover:text-primary transition-colors",
-                isActive("/about") && "text-primary font-semibold"
-              )}
-              aria-current={isActive("/about") ? "page" : undefined}
-            >
-              About Us
-            </Link>
+            <form
+              className="hidden md:flex"
+              role="search"
+              onSubmit={(e) => {
+                e.preventDefault();
 
-            <Link
-              href="/contact"
-              className={cn(
-                "text-base font-medium hover:text-primary transition-colors",
-                isActive("/contact") && "text-primary font-semibold"
-              )}
-              aria-current={isActive("/contact") ? "page" : undefined}
+                submitProductSearch(
+                  productQuery,
+                );
+              }}
             >
-              Contact
-            </Link>
-          </nav>
+              <div className="relative w-full">
+
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-foreground" />
+
+                <Input
+                  value={
+                    productQuery
+                  }
+                  onChange={(e) =>
+                    setProductQuery(
+                      e.target
+                        .value,
+                    )
+                  }
+                  placeholder="Search products..."
+                  className="pl-9"
+                />
+              </div>
+            </form>
+
+          </div>
 
           <div className="flex items-center gap-2 md:gap-4">
-            <div>
-              <Link
-                href={`tel:${BUSINESS_PHONE_E164}`}
-                className="flex items-center gap-2 text-base font-medium hover:text-primary transition-colors"
-              >
-                <PhoneIcon className="h-5 w-5" /> {BUSINESS_PHONE_DISPLAY}
-              </Link>
-            </div>
+
+            <Button className="hidden lg:flex">
+              Download the App &
+              claim Offers
+            </Button>
 
             <Link
-              href={isLoggedIn ? "/account" : "/login"}
-              className="hidden md:flex items-center gap-2 text-base font-medium hover:text-primary transition-colors"
+              href={
+                isLoggedIn
+                  ? "/account"
+                  : "/login"
+              }
+              className="hidden md:flex items-center gap-2 text-lg font-medium hover:text-primary transition-colors"
             >
               <User className="h-5 w-5" />
-              {isLoggedIn ? "Account" : "Login"}
+
+              {isLoggedIn
+                ? "Account"
+                : "Login"}
             </Link>
 
+            {/* Cart */}
             <div className="relative">
+
               <Link href="/cart">
+
                 <ShoppingCart className="h-5 w-5" />
-                {cartCount > 0 && (
-                  <div className="absolute -top-2 -right-2 h-4 w-4 flex items-center justify-center p-0 text-xs text-foreground bg-primary rounded-full">
-                    {cartCount}
+
+                {cartCount >
+                  0 && (
+                  <div className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center text-xs text-white bg-primary rounded-full">
+                    {
+                      cartCount
+                    }
                   </div>
                 )}
+
               </Link>
+
             </div>
 
             {/* Mobile Menu */}
             <div className="md:hidden">
+
               <Button
-              hideIcon
+                hideIcon
                 variant="ghost"
                 size="icon"
-                onClick={() => setMenuOpen(true)}
+                onClick={() =>
+                  setMenuOpen(
+                    true,
+                  )
+                }
               >
                 <Menu className="h-5 w-5" />
               </Button>
 
               {menuOpen && (
+
                 <div
-                  className="fixed inset-0 z-50 flex h-screen"
-                  role="dialog"
-                  aria-modal="true"
-                >
-                  {/* Backdrop */}
-                  <div
-                    className="fixed inset-0 bg-black/50 backdrop-blur-sm h-screen"
-                    onClick={() => setMenuOpen(false)}
-                  />
-                  {/* Panel */}
-                  <div className="relative ml-auto w-64 max-w-full h-full bg-foreground p-6 shadow-lg transform transition-transform duration-200 ease-in-out">
+  className={cn(
+    "fixed inset-0 z-[9999] flex transition-all duration-300",
+    menuOpen
+      ? "pointer-events-auto"
+      : "pointer-events-none",
+  )}
+>
+
+  {/* Overlay */}
+ <div
+  className={cn(
+    "absolute inset-0 z-0 backdrop-blur-sm transition-all duration-300 ease-out",
+    menuOpen
+      ? "bg-black/50 opacity-100"
+      : "bg-black/0 opacity-0",
+  )}
+  onClick={() => setMenuOpen(false)}
+/>
+
+  {/* Drawer */}
+<div
+  className="
+    relative
+    z-10
+    ml-auto
+    w-[320px]
+    sm:w-[360px]
+    h-screen
+    bg-background
+    p-6
+    shadow-2xl
+    overflow-y-auto
+
+    animate-[slideDrawer_.1s_ease-in-out]
+  "
+>
+                  
+
                     <button
-                      className="absolute top-4 right-4 p-1"
-                      onClick={() => setMenuOpen(false)}
-                      aria-label="Close menu"
+                      className="absolute top-4 right-4 text-lg"
+                      onClick={() =>
+                        setMenuOpen(
+                          false,
+                        )
+                      }
                     >
-                      x
+                      ✕
                     </button>
 
-                    <nav className="flex flex-col gap-4 mt-6">
+                    {/* Search */}
+                    <form
+                      className="mt-10"
+                      onSubmit={(
+                        e,
+                      ) => {
+                        e.preventDefault();
+
+                        submitProductSearch(
+                          productQuery,
+                        );
+
+                        setMenuOpen(
+                          false,
+                        );
+                      }}
+                    >
+
+                      <div className="relative">
+
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4" />
+
+                        <Input
+                          value={
+                            productQuery
+                          }
+                          onChange={(
+                            e,
+                          ) =>
+                            setProductQuery(
+                              e
+                                .target
+                                .value,
+                            )
+                          }
+                          placeholder="Search products..."
+                          className="pl-9"
+                        />
+
+                      </div>
+
+                    </form>
+
+                    {/* Mobile Links */}
+                    <nav className="flex flex-col gap-5 mt-8">
+
                       <Link
                         href="/"
-                        onClick={() => setMenuOpen(false)}
-                        className="text-lg font-medium hover:text-primary transition-colors"
+                        onClick={() =>
+                          setMenuOpen(
+                            false,
+                          )
+                        }
                       >
                         Home
                       </Link>
+
                       <Link
                         href="/products"
-                        onClick={() => setMenuOpen(false)}
-                        className="text-lg font-medium hover:text-primary transition-colors"
+                        onClick={() =>
+                          setMenuOpen(
+                            false,
+                          )
+                        }
                       >
                         Products
                       </Link>
+
                       <Link
                         href="/about"
-                        onClick={() => setMenuOpen(false)}
-                        className="text-lg font-medium hover:text-primary transition-colors"
+                        onClick={() =>
+                          setMenuOpen(
+                            false,
+                          )
+                        }
                       >
                         About Us
                       </Link>
+
                       <Link
                         href="/contact"
-                        onClick={() => setMenuOpen(false)}
-                        className="text-lg font-medium hover:text-primary transition-colors"
+                        onClick={() =>
+                          setMenuOpen(
+                            false,
+                          )
+                        }
                       >
                         Contact
                       </Link>
+
                       <Link
-                        href={isLoggedIn ? "/account" : "/login"}
-                        onClick={() => setMenuOpen(false)}
-                        className="text-lg font-medium hover:text-primary transition-colors"
+                        href="/refer-earn"
+                        onClick={() =>
+                          setMenuOpen(
+                            false,
+                          )
+                        }
                       >
-                        {isLoggedIn ? "Account" : "Login"}
+                        Refer & Earn
                       </Link>
+
+                      <Link
+                        href={
+                          isLoggedIn
+                            ? "/account"
+                            : "/login"
+                        }
+                        onClick={() =>
+                          setMenuOpen(
+                            false,
+                          )
+                        }
+                      >
+                        {isLoggedIn
+                          ? "Account"
+                          : "Login"}
+                      </Link>
+
+                      <Link
+                        href={`tel:${BUSINESS_PHONE_E164}`}
+                        className="flex items-center gap-2 pt-5 border-t"
+                      >
+                        <PhoneIcon className="h-4 w-4" />
+
+                        {
+                          BUSINESS_PHONE_DISPLAY
+                        }
+
+                      </Link>
+
                     </nav>
+
                   </div>
+
                 </div>
+
               )}
+
             </div>
+
           </div>
+
         </div>
+
+        {/* Desktop Bottom Nav */}
+        <div className="flex justify-between w-full pt-3 pl-36">
+
+          <nav className="hidden md:flex">
+
+            <ul className="flex items-center divide-x divide-primary">
+
+              <li className="px-4">
+                <Link
+                  href="/"
+                  className={cn(
+                    "text-base font-semibold uppercase text-foreground hover:text-primary transition-colors",
+                    isActive(
+                      "/",
+                    ) &&
+                      "text-primary underline",
+                  )}
+                >
+                  Home
+                </Link>
+              </li>
+
+              <li className="px-4">
+                <Link
+                  href="/products"
+                  className={cn(
+                    "text-base font-semibold uppercase text-foreground hover:text-primary transition-colors",
+                    isActive(
+                      "/products",
+                    ) &&
+                      "text-primary underline",
+                  )}
+                >
+                  Our Products
+                </Link>
+              </li>
+
+              <li className="px-4">
+                <Link
+                  href="/about"
+                  className={cn(
+                    "text-base font-semibold uppercase text-foreground hover:text-primary transition-colors",
+                    isActive(
+                      "/about",
+                    ) &&
+                      "text-primary underline",
+                  )}
+                >
+                  About Us
+                </Link>
+              </li>
+
+              <li className="px-4">
+                <Link
+                  href="/contact"
+                  className={cn(
+                    "text-base font-semibold uppercase text-foreground hover:text-primary transition-colors",
+                    isActive(
+                      "/contact",
+                    ) &&
+                      "text-primary underline",
+                  )}
+                >
+                  Contact
+                </Link>
+              </li>
+
+              <li className="px-4">
+                <Link
+                  href="/refer-earn"
+                  className={cn(
+                    "text-base font-semibold uppercase text-foreground hover:text-primary transition-colors",
+                    isActive(
+                      "/refer-earn",
+                    ) &&
+                      "text-primary underline",
+                  )}
+                >
+                  Refer & Earn
+                </Link>
+              </li>
+
+            </ul>
+
+          </nav>
+
+          <Link
+            href={`tel:${BUSINESS_PHONE_E164}`}
+            className="hidden lg:flex items-center gap-2 text-lg font-semibold hover:text-primary"
+          >
+            <PhoneIcon className="h-5 w-5" />
+
+            {
+              BUSINESS_PHONE_DISPLAY
+            }
+
+          </Link>
+
+        </div>
+
       </div>
+
     </header>
   );
 }

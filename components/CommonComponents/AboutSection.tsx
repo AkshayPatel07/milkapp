@@ -52,7 +52,7 @@ const AboutSection = () => {
             </h2>
 
             {/* Description */}
-            <p className="text-secondary mb-8">
+            <p className="text-foreground mb-8">
               We’re more than just a farm — we’re your neighbors. We’re proud to
               be part of the local community, providing families with wholesome
               dairy that’s produced just down the road. Our cows are
@@ -68,7 +68,7 @@ const AboutSection = () => {
                   <span className="bg-primary p-1 rounded-full mt-1">
                     <Check size={14} className="text-white" />
                   </span>
-                  <span className="text-secondary">{item.text}</span>
+                  <span className="text-foreground">{item.text}</span>
                 </li>
               ))}
             </ul>
@@ -85,7 +85,7 @@ const AboutSection = () => {
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
                   <div className="bg-primary p-3 rounded-full">
-                    <Milk className="text-foreground" size={20} />
+                    <Milk className="text-white" size={20} />
                   </div>
                   <span className="font-medium text-foreground">
                     Driven by Tradition, Guided by Innovation
@@ -94,7 +94,7 @@ const AboutSection = () => {
 
                 <div className="flex items-center gap-3">
                   <div className="bg-primary p-3 rounded-full">
-                    <Tractor className="text-foreground" size={20} />
+                    <Tractor className="text-white" size={20} />
                   </div>
                   <span className="font-medium text-foreground">
                     Committed to Sustainable & Ethical Farming
@@ -103,9 +103,9 @@ const AboutSection = () => {
               </div>
             </div>
 
-            <Button size="lg" className="text-lg">
+            {/* <Button size="lg" className="text-lg">
               <Link href="/about">Learn More About</Link>
-            </Button>
+            </Button> */}
           </div>
         </div>
       </section>
