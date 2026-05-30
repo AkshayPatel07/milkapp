@@ -48,11 +48,11 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-muted/30 p-4">
-      <Card className="w-full max-w-md">
+    <div className="flex items-center justify-center bg-muted/30 p-7">
+      <Card className="w-full max-w-md py-4">
         <CardHeader>
           <CardTitle>Admin Login</CardTitle>
-          <CardDescription>Help: {BUSINESS_PHONE_DISPLAY}</CardDescription>
+          {/* <CardDescription>Help: {BUSINESS_PHONE_DISPLAY}</CardDescription> */}
         </CardHeader>
         <CardContent className="space-y-4">
           {error ? <div className="text-sm text-destructive">{error}</div> : null}

@@ -81,5 +81,5 @@ export async function POST(request: Request) {
     }
   }
 
-  return NextResponse.json({ ok: true, dev_otp: devMode ? otp : undefined })
+  return NextResponse.json({ ok: true, dev_otp: devMode ? otp : undefined, dev_bypass: devMode })
 }

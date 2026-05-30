@@ -25,17 +25,18 @@ export function AdminHeader() {
   }
 
   return (
-    <div className="border-b bg-background sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 py-4">
+    <div className="border-b bg-background sticky top-[108px]">
+      <div className="max-w-7xl mx-auto p-4">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-4">
             <Link href="/admin" className="flex items-center gap-2">
+            
               <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
                 <Milk className="h-4 w-4 text-white" />
               </div>
               <span className="font-semibold text-lg">FreshMilk Admin</span>
             </Link>
-            <span className="text-xs text-foreground hidden md:inline">Help: {BUSINESS_PHONE_DISPLAY}</span>
+            {/* <span className="text-xs text-foreground hidden md:inline">Help: {BUSINESS_PHONE_DISPLAY}</span> */}
           </div>
           <div className="flex items-center gap-4">
             {adminLabel && <span className="text-sm text-foreground hidden sm:inline">{adminLabel}</span>}

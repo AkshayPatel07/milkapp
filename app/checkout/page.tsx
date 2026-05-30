@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -20,6 +20,7 @@ export default function CheckoutPage() {
   const { items, total, clearCart } = useCart()
   const router = useRouter()
   const [isProcessing, setIsProcessing] = useState(false)
+  const [loadingProfile, setLoadingProfile] = useState(true)
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -32,6 +33,39 @@ export default function CheckoutPage() {
     paymentMethod: "cod",
     notes: "",
   })
+
+  useEffect(() => {
+    let mounted = true
+
+    async function loadAccountDetails() {
+      try {
+        const res = await fetch("/api/auth/me", { cache: "no-store" })
+        const data = await res.json().catch(() => null)
+
+        if (!mounted) return
+        if (!data?.user) {
+          setLoadingProfile(false)
+          return
+        }
+
+        setFormData((current) => ({
+          ...current,
+          fullName: data.profile?.full_name || data.user.username || "",
+          phone: data.user.phone || "",
+          address: data.profile?.address_full || "",
+          pincode: data.profile?.pincode || "",
+        }))
+      } finally {
+        if (mounted) setLoadingProfile(false)
+      }
+    }
+
+    loadAccountDetails()
+
+    return () => {
+      mounted = false
+    }
+  }, [])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
@@ -145,7 +179,12 @@ export default function CheckoutPage() {
   return (
     <div className="min-h-screen py-12 bg-muted/30">
       <div className="max-w-7xl mx-auto px-4">
-        <h1 className="text-4xl font-bold mb-8">Checkout</h1>
+        <h1 className="text-4xl font-bold mb-3">Checkout</h1>
+        <p className="text-sm text-foreground mb-6">
+          {loadingProfile
+            ? "Loading your account details..."
+            : "Your saved account details are filled in below. You can change anything before placing the order."}
+        </p>
 
         <form onSubmit={handleSubmit}>
           <div className="grid lg:grid-cols-3 gap-8">
@@ -186,15 +225,15 @@ export default function CheckoutPage() {
                   </div>
                   <div className="space-y-2">
                     <label htmlFor="email">Email *</label>
-                    <Input
-                      id="email"
-                      name="email"
-                      type="email"
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      required
-                      placeholder="your@email.com"
-                    />
+                      <Input
+                        id="email"
+                        name="email"
+                        type="email"
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        required
+                        placeholder="your@email.com"
+                      />
                   </div>
                 </CardContent>
               </Card>

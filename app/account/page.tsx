@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { BUSINESS_PHONE_DISPLAY, SERVICE_CITY } from "@/lib/config"
+import { clearSubscriptionRequest, loadSubscriptionRequest, type SubscriptionRequest } from "@/lib/subscription-request"
 
 type MeResponse = {
   user: null | { id: string; username: string; phone: string; role: "user" | "admin" }
@@ -27,6 +28,7 @@ export default function AccountPage() {
   const [pincode, setPincode] = useState("")
   const [litersPerDay, setLitersPerDay] = useState("1")
   const [pauseUntil, setPauseUntil] = useState<string>("")
+  const [subscriptionRequest, setSubscriptionRequest] = useState<SubscriptionRequest | null>(null)
 
   const hasAddress = Boolean(fullName.trim() && addressFull.trim() && pincode.trim())
 
@@ -50,6 +52,7 @@ export default function AccountPage() {
       setPincode(data.profile?.pincode || "")
       setLitersPerDay(String(data.subscription?.liters_per_day ?? 1))
       setPauseUntil(data.subscription?.pause_until || "")
+      setSubscriptionRequest(loadSubscriptionRequest())
       setLoading(false)
     }
     load()
@@ -128,6 +131,11 @@ export default function AccountPage() {
     }
   }
 
+  function clearPendingSubscription() {
+    clearSubscriptionRequest()
+    setSubscriptionRequest(null)
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen py-12">
@@ -149,7 +157,7 @@ export default function AccountPage() {
               {SERVICE_CITY} subscription portal • Help: {BUSINESS_PHONE_DISPLAY}
             </p>
             {user ? (
-              <p className="text-xs text-foreground mt-1">
+              <p className="text-sm text-foreground mt-1">
                 Logged in as <span className="font-medium">{user.username}</span> • {user.phone}
               </p>
             ) : null}
@@ -168,7 +176,7 @@ export default function AccountPage() {
 
         {error ? <div className="text-sm text-destructive">{error}</div> : null}
 
-        <Card>
+        <Card className="py-4">
           <CardHeader>
             <CardTitle>Delivery Address (Required)</CardTitle>
           </CardHeader>
@@ -204,7 +212,7 @@ export default function AccountPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="py-4">
           <CardHeader>
             <CardTitle>Daily Milk Subscription</CardTitle>
           </CardHeader>
@@ -239,9 +247,40 @@ export default function AccountPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="py-4">
           <CardHeader>
-            <CardTitle>Danger Zone</CardTitle>
+            <CardTitle>Subscription Request</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {subscriptionRequest ? (
+              <>
+                <p className="text-sm text-foreground">
+                  <span className="font-medium">Daily Milk Subscription</span> for {subscriptionRequest.productName}
+                </p>
+                <p className="text-sm text-foreground">
+                  Quantity: <span className="font-medium">{subscriptionRequest.quantity} {subscriptionRequest.unit} per day</span>
+                </p>
+                <p className="text-sm text-foreground">
+                  City: <span className="font-medium">{subscriptionRequest.city}</span>
+                </p>
+                <p className="text-xs text-foreground">
+                  Requested on {new Date(subscriptionRequest.requestedAt).toLocaleString()}
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  <Button variant="outline" onClick={clearPendingSubscription}>
+                    Clear Request
+                  </Button>
+                </div>
+              </>
+            ) : (
+              <p className="text-sm text-foreground">No pending subscription request from this device.</p>
+            )}
+          </CardContent>
+        </Card>
+
+        <Card className="py-4">
+          <CardHeader>
+            <CardTitle>Delete Account</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
             <p className="text-sm text-foreground">Deleting your account removes your subscription and address.</p>
@@ -254,4 +293,3 @@ export default function AccountPage() {
     </div>
   )
 }
-

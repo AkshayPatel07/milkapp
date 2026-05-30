@@ -5,9 +5,12 @@ import { useEffect, useMemo, useState } from "react"
 import { Plus, Minus, Loader2, MessageCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
 import { createClient } from "@/lib/supabase/client"
 import { useCart } from "@/hooks/use-cart"
 import { SERVICE_CITY } from "@/lib/config"
+import { saveSubscriptionRequest } from "@/lib/subscription-request"
 import { openWhatsApp } from "@/lib/whatsapp"
 
 interface Product {
@@ -25,6 +28,8 @@ export default function ProductSection() {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [subscriptionProduct, setSubscriptionProduct] = useState<Product | null>(null)
+  const [subscriptionQuantity, setSubscriptionQuantity] = useState("1")
   const { addToCart, getItemQuantity, updateQuantity } = useCart()
 
   useEffect(() => {
@@ -50,6 +55,27 @@ export default function ProductSection() {
   }, [])
 
   const inStockProducts = useMemo(() => products.filter((p) => p.in_stock), [products])
+
+  function openSubscription(product: Product) {
+    setSubscriptionProduct(product)
+    setSubscriptionQuantity(String(getItemQuantity(product.id) || 1))
+  }
+
+  function sendSubscriptionWhatsApp(product: Product) {
+    const quantity = Number(subscriptionQuantity)
+    if (!Number.isFinite(quantity) || quantity <= 0) return
+
+    saveSubscriptionRequest({
+      productName: product.name,
+      quantity,
+      unit: product.unit,
+      city: SERVICE_CITY,
+      requestedAt: new Date().toISOString(),
+    })
+    const message = `Hello FreshMilk,\n\nI want to start a Daily Milk Subscription.\n- Product: ${product.name}\n- Quantity: ${quantity} ${product.unit} per day\n\nDelivery city: ${SERVICE_CITY}\nPlease confirm the subscription and delivery schedule.`
+    openWhatsApp(message)
+    setSubscriptionProduct(null)
+  }
 
   return (
     <section className="py-12">
@@ -112,21 +138,30 @@ export default function ProductSection() {
                   <CardFooter className="p-6 pt-0">
                     {quantity === 0 ? (
                       <div className="flex flex-col gap-3 w-full">
-                        <Button
-                          className="w-full"
-                          hideIcon
-                          onClick={() =>
-                            addToCart({
-                              id: product.id,
-                              name: product.name,
-                              price: product.price,
-                              quantity: 1,
-                              image: product.image_url,
-                            })
-                          }
-                        >
-                          Add to Cart
-                        </Button>
+                        <div className="grid grid-cols-2 gap-3">
+                          <Button
+                            className="w-full bg-[#143d59] text-white hover:bg-[#0f3149]"
+                            hideIcon
+                            onClick={() =>
+                              addToCart({
+                                id: product.id,
+                                name: product.name,
+                                price: product.price,
+                                quantity: 1,
+                                image: product.image_url,
+                              })
+                            }
+                          >
+                            Buy Once
+                          </Button>
+                          <Button
+                            className="w-full bg-emerald-400 text-black hover:bg-emerald-500"
+                            hideIcon
+                            onClick={() => openSubscription(product)}
+                          >
+                            Subscribe
+                          </Button>
+                        </div>
                         <Button className="w-full" hideIcon variant="outline" onClick={() => sendWhatsApp(1)}>
                           <MessageCircle className="mr-2 h-4 w-4" />
                           WhatsApp Order
@@ -151,21 +186,30 @@ export default function ProductSection() {
                             <Plus className="h-4 w-4" />
                           </button>
                         </div>
-                        <Button
-                          className="w-full"
-                          hideIcon
-                          onClick={() =>
-                            addToCart({
-                              id: product.id,
-                              name: product.name,
-                              price: product.price,
-                              quantity: 1,
-                              image: product.image_url,
-                            })
-                          }
-                        >
-                          Add One More
-                        </Button>
+                        <div className="grid grid-cols-2 gap-3">
+                          <Button
+                            className="w-full bg-[#143d59] text-white hover:bg-[#0f3149]"
+                            hideIcon
+                            onClick={() =>
+                              addToCart({
+                                id: product.id,
+                                name: product.name,
+                                price: product.price,
+                                quantity: 1,
+                                image: product.image_url,
+                              })
+                            }
+                          >
+                            Add One More
+                          </Button>
+                          <Button
+                            className="w-full bg-emerald-400 text-black hover:bg-emerald-500"
+                            hideIcon
+                            onClick={() => openSubscription(product)}
+                          >
+                            Subscribe
+                          </Button>
+                        </div>
                         <Button className="w-full" hideIcon variant="destructive" onClick={() => sendWhatsApp(quantity)}>
                           <MessageCircle className="mr-2 h-4 w-4" />
                           WhatsApp this order
@@ -179,6 +223,45 @@ export default function ProductSection() {
           </div>
         )}
       </div>
+
+      <Dialog open={Boolean(subscriptionProduct)} onOpenChange={(open) => !open && setSubscriptionProduct(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Daily Milk Subscription</DialogTitle>
+            <DialogDescription>
+              Enter how much milk you want delivered every day to your home.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Quantity per day</label>
+            <Input
+              type="number"
+              min="1"
+              step="0.5"
+              value={subscriptionQuantity}
+              onChange={(e) => setSubscriptionQuantity(e.target.value)}
+              placeholder="1"
+            />
+            {subscriptionProduct ? (
+              <p className="text-xs text-foreground">
+                {subscriptionProduct.name} will be delivered daily in {SERVICE_CITY}.
+              </p>
+            ) : null}
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setSubscriptionProduct(null)}>
+              Cancel
+            </Button>
+            <Button
+              className="bg-emerald-400 text-black hover:bg-emerald-500"
+              onClick={() => subscriptionProduct && sendSubscriptionWhatsApp(subscriptionProduct)}
+              disabled={!subscriptionProduct || !Number.isFinite(Number(subscriptionQuantity)) || Number(subscriptionQuantity) <= 0}
+            >
+              Send Subscription
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </section>
   )
 }

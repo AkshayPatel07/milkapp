@@ -18,6 +18,11 @@ export async function POST(request: Request) {
   const otpLength = getOtpLength()
   if (!phone || otp.length !== otpLength) return NextResponse.json({ error: "Invalid input" }, { status: 400 })
 
+  if (process.env.APP_OTP_DEV_MODE === "true") {
+    const otpToken = signOtpToken({ phone, purpose: "register" }, getAuthSecret(), 10 * 60)
+    return NextResponse.json({ ok: true, otp_token: otpToken, dev_bypass: true })
+  }
+
   const admin = createAdminClient()
   const { data: reqRow, error } = await admin
     .from("app_otp_requests")
