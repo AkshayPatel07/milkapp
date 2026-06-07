@@ -19,7 +19,7 @@ function formatOtpMessage(otp: string, expiresMinutes: number) {
 async function sendTwilioSms(toE164: string, body: string) {
   const accountSid = requireEnv("TWILIO_ACCOUNT_SID")
   const authToken = requireEnv("TWILIO_AUTH_TOKEN")
-  const from = process.env.TWILIO_FROM || ""
+  const from = process.env.TWILIO_FROM || process.env.TWILIO_WHATSAPP_FROM || ""
   const messagingServiceSid = process.env.TWILIO_MESSAGING_SERVICE_SID || ""
 
   if (!from && !messagingServiceSid) {
@@ -125,12 +125,12 @@ export async function sendOtpSms(params: SendOtpSmsParams) {
     return
   }
 
-  if (provider === "twilio") {
+  if (provider === "twilio" || provider === "whatsapp") {
     await sendTwilioSms(params.toE164, body)
     return
   }
 
   throw new Error(
-    "SMS provider not configured. Set APP_SMS_PROVIDER=twilio (or console) and required credentials.",
+    "SMS provider not configured. Set APP_SMS_PROVIDER=twilio, whatsapp, or console and required credentials.",
   )
 }

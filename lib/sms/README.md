@@ -7,6 +7,7 @@ Delivery is configurable:
 - `APP_OTP_DEV_MODE=true` returns `dev_otp` in the API response (dev-only).
 - `APP_SMS_PROVIDER=console` logs OTP to the server console.
 - `APP_SMS_PROVIDER=twilio` sends OTP via Twilio.
+- `APP_SMS_PROVIDER=whatsapp` also sends via Twilio, but expects a WhatsApp sender such as `TWILIO_WHATSAPP_FROM=whatsapp:+1234567890`.
 - `APP_SMS_PROVIDER=2factor` sends OTP via 2Factor (AUTOGEN + VERIFY).
 
 ## Twilio env vars
@@ -15,6 +16,15 @@ Delivery is configurable:
 - `TWILIO_ACCOUNT_SID`
 - `TWILIO_AUTH_TOKEN`
 - `TWILIO_FROM` (E.164 sender) **or** `TWILIO_MESSAGING_SERVICE_SID`
+- Optional: `APP_OTP_SMS_TEMPLATE` (supports `{otp}` and `{minutes}`)
+
+## WhatsApp via Twilio
+
+- `APP_SMS_PROVIDER=whatsapp`
+- `TWILIO_ACCOUNT_SID`
+- `TWILIO_AUTH_TOKEN`
+- `TWILIO_WHATSAPP_FROM` (for example `whatsapp:+1234567890`)
+- Optional: `TWILIO_MESSAGING_SERVICE_SID`
 - Optional: `APP_OTP_SMS_TEMPLATE` (supports `{otp}` and `{minutes}`)
 
 ## 2Factor env vars
